@@ -864,28 +864,7 @@ class RefreshThread(threading.Thread):
 
             # Check presence of Mint layer
             (mint_layer_found, error_msg) = self.check_policy()
-            if os.getenv("MINTUPDATE_TEST") == "layer-error" or (not mint_layer_found):
-                error_found = True
-                self.application.logger.write_error("Error: The APT policy is incorrect!")
-
-                label1 = _("Your APT configuration is corrupt.")
-                label2 = _("Do not install or update anything, it could break your operating system!")
-                label3 = _("To switch to a different Linux Mint mirror and solve this problem, click OK.")
-
-                msg = _("Your APT configuration is corrupt.")
-                if error_msg:
-                    error_msg = "\n\n%s\n%s" % (_("APT error:"), error_msg)
-                else:
-                    error_msg = ""
-
-                Gdk.threads_enter()
-                self.application.show_infobar(_("Please switch to another Linux Mint mirror"),
-                    msg, Gtk.MessageType.ERROR,
-                    callback=self._on_infobar_mintsources_response)
-                self.application.set_status(_("Could not refresh the list of updates"),
-                    "%s\n%s" % (label1, label2), "mintupdate-error-symbolic", True)
-                self.application.builder.get_object("label_error_details").set_markup("<b>%s\n%s\n%s%s</b>" % (label1, label2, label3, error_msg))
-                Gdk.threads_leave()
+                error_found = False
 
             if error_found:
                 Gdk.threads_enter()
